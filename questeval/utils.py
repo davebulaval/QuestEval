@@ -86,7 +86,7 @@ class API_T2T:
         for i in range(0, len(sources), self.model_batch_size):
             inputs = self.tokenizer(
                 sources[i : i + self.model_batch_size],
-                max_new_tokens=self.max_source_length,
+                max_length=self.max_source_length,
                 padding="max_length",
                 truncation=True,
                 return_tensors="pt",
