@@ -73,7 +73,6 @@ class API_T2T:
             self.model.cuda()
         self.max_source_length = max_source_length
         self.model_batch_size = model_batch_size
-        self.model.eval()
 
     def predict(
         self,
@@ -130,31 +129,36 @@ class API_T2T:
         return keep_score_idx_scores, gen_texts
 
 
+def remove_articles(text):
+    regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)
+    return re.sub(regex, " ", text)
+
+
+def white_space_fix(text):
+    return " ".join(text.split())
+
+
+def remove_punc(text):
+    exclude = set(string.punctuation)
+    return "".join(ch for ch in text if ch not in exclude)
+
+
+def lower(text):
+    return text.lower()
+
+
+def normalize_answer(s):
+    """Lower text and remove punctuation, articles and extra whitespace."""
+    return white_space_fix(remove_articles(remove_punc(lower(s))))
+
+
+def get_tokens(s):
+    if not s:
+        return []
+    return normalize_answer(s).split()
+
+
 def calculate_f1_squad(a_gold: str, a_pred: str) -> float:
-    def normalize_answer(s):
-        """Lower text and remove punctuation, articles and extra whitespace."""
-
-        def remove_articles(text):
-            regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)
-            return re.sub(regex, " ", text)
-
-        def white_space_fix(text):
-            return " ".join(text.split())
-
-        def remove_punc(text):
-            exclude = set(string.punctuation)
-            return "".join(ch for ch in text if ch not in exclude)
-
-        def lower(text):
-            return text.lower()
-
-        return white_space_fix(remove_articles(remove_punc(lower(s))))
-
-    def get_tokens(s):
-        if not s:
-            return []
-        return normalize_answer(s).split()
-
     gold_toks = get_tokens(a_gold)
     pred_toks = get_tokens(a_pred)
     common = collections.Counter(gold_toks) & collections.Counter(pred_toks)
