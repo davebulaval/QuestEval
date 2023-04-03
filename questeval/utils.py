@@ -183,7 +183,10 @@ def calculate_BERTScore(
         predictions=model_predictions, references=gold_references
     )
     final_score = metric_BERTScore.compute(
-        model_type="bert-base-multilingual-cased", device=device
+        model_type="bert-base-multilingual-cased",
+        device=device,
+        use_fast_tokenizer=True,
+        lang="en",
     )
 
     """
