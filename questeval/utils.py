@@ -73,6 +73,7 @@ class API_T2T:
             self.model.cuda()
         self.max_source_length = max_source_length
         self.model_batch_size = model_batch_size
+        self.model.eval()
 
     def predict(
         self,
