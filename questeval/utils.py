@@ -53,6 +53,7 @@ class API_T2T:
         model_batch_size: int,
         keep_score_idx: int,  # Note: will work only if beamsize == 1
         device: str = "cuda",
+        fp16: bool = False,
     ) -> None:
         self.pretrained_model_name_or_path = pretrained_model_name_or_path
         self.tokenizer = T5Tokenizer.from_pretrained(
@@ -62,6 +63,9 @@ class API_T2T:
         self.model = T5ForConditionalGeneration.from_pretrained(
             pretrained_model_name_or_path=pretrained_model_name_or_path
         )
+        self.fp16 = fp16
+        if self.fp16:
+            self.model.half()
 
         self.keep_score_idx = keep_score_idx
 
@@ -82,7 +86,7 @@ class API_T2T:
         for i in range(0, len(sources), self.model_batch_size):
             inputs = self.tokenizer(
                 sources[i : i + self.model_batch_size],
-                max_length=self.max_source_length,
+                max_new_tokens=self.max_source_length,
                 padding="max_length",
                 truncation=True,
                 return_tensors="pt",

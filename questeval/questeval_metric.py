@@ -810,6 +810,7 @@ class QuestEval:
                 keep_score_idx=keep_score_idx,
                 max_source_length=512,
                 model_batch_size=model_batch_size,
+                fp16=True,
                 device=self.device,
             )
 
