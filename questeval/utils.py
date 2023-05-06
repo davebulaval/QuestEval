@@ -61,7 +61,9 @@ class API_T2T:
         )
 
         self.model = T5ForConditionalGeneration.from_pretrained(
-            pretrained_model_name_or_path=pretrained_model_name_or_path
+            pretrained_model_name_or_path=pretrained_model_name_or_path,
+            device_map="auto",
+            torch_dtype=torch.float16
         )
         self.fp16 = fp16
         if self.fp16:
@@ -69,8 +71,8 @@ class API_T2T:
 
         self.keep_score_idx = keep_score_idx
 
-        if device == "cuda":
-            self.model.cuda()
+        # if device == "cuda":
+        #     self.model.cuda()
         self.max_source_length = max_source_length
         self.model_batch_size = model_batch_size
 
