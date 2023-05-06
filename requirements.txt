@@ -1,7 +1,7 @@
 pytest==6.2.4
 transformers
 sentencepiece
-bert_score==0.3.13
+bert_score
 Unidecode==1.2.0
 spacy==3.5.1
 evaluate
